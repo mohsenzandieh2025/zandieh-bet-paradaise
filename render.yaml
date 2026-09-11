@@ -1,0 +1,46 @@
+services:
+  # 🔵 بک‌اند Node.js
+  - type: web
+    name: zandie-bet-backend
+    runtime: node
+    plan: free
+    region: frankfurt
+    branch: main
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "18"
+      - key: NODE_ENV
+        value: production
+      - key: SITE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: TRON_PROVIDER
+        value: https://api.trongrid.io
+      - key: TRON_PRIVATE_KEY
+        sync: false
+      - key: FAUCET_WALLET_ADDRESS
+        sync: false
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false
+
+  # 🟢 فرانت‌اند Static
+  - type: web
+    name: zandie-bet-frontend
+    runtime: static
+    plan: free
+    region: frankfurt
+    branch: main
+    rootDir: frontend
+    buildCommand: echo "static"
+    staticPublishPath: ./
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
